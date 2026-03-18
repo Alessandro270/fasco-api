@@ -22,6 +22,10 @@ export class CheckoutService extends GenericService<Checkout> {
       );
 
     const checkout = await this.repository.create({ ...dto, purchase });
+    if (!checkout)
+      throw new InternalServerErrorException(
+        'Ocorreu um erro ao fazer o checkout',
+      );
     return { message: 'Checkout efetuado com sucesso' };
   }
 }

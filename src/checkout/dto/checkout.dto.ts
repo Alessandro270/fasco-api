@@ -31,6 +31,9 @@ export class CheckoutDto {
   @IsNotEmpty()
   postalCode: string;
 
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => PurchaseDto)
   purchase: PurchaseDto;
 
   @IsArray()
