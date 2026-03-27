@@ -13,7 +13,6 @@ import { CategoryService } from 'src/category/category.service';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ReviewService } from 'src/review/review.service';
 import { CreateReviewDto } from 'src/review/dto/create-review.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class ProductService extends GenericService<Product> {
