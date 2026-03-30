@@ -5,7 +5,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { JwtService } from '@nestjs/jwt';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 
 @Controller('auth')

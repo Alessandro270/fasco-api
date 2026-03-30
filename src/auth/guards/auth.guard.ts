@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -8,12 +9,14 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from 'src/common/decorators/public.decorator';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
+    private readonly userService: UserService,
   ) {}
   private extractToken(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
@@ -25,7 +28,13 @@ export class AuthGuard implements CanActivate {
       context.getClass(),
     ]);
     if (isPublic) return true;
+
     const request = context.switchToHttp().getRequest<any>();
+    const role = this.reflector.getAllAndOverride<string>('roles', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
     const token = this.extractToken(request);
 
     if (!token) throw new UnauthorizedException();
@@ -34,12 +43,15 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync<{
         sub: string;
         id: string;
+        role: string;
       }>(token);
 
       request.user = payload;
     } catch (err) {
       throw new UnauthorizedException(`Token inválido: ${err.message}`);
     }
+    if (request.user && request.user.role !== role)
+      throw new ForbiddenException('Acesso negado');
     return true;
   }
 }

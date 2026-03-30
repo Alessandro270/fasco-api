@@ -32,7 +32,7 @@ export class AuthService {
     const password = await bcrypt.hash(createUserDto.password, 12);
 
     const user = await this.userService.create({ ...createUserDto, password });
-    const payload = { id: user._id, sub: user.email };
+    const payload = { id: user._id, sub: user.email, role: user.role };
     return { access_token: await this.jwtService.signAsync(payload) };
   }
 
@@ -44,7 +44,7 @@ export class AuthService {
     if (!user) throw new UnauthorizedException('Credenciais inválidas');
     if (!(await bcrypt.compare(loginDto.password, user.password)))
       throw new UnauthorizedException('Credenciais inválidas');
-    const payload = { id: String(user._id), sub: user.email };
+    const payload = { id: String(user._id), sub: user.email, role: user.role };
 
     const access_token = await this.jwtService.signAsync(payload);
     return { access_token };

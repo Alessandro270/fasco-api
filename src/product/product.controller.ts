@@ -16,6 +16,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
 import { CreateReviewDto } from 'src/review/dto/create-review.dto';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
+import { Role } from 'src/common/role.enum';
+import { RoleDecorator } from 'src/common/decorators/role.decorator';
 
 @Controller('Product')
 export class ProductController {
@@ -39,22 +41,25 @@ export class ProductController {
   @Put(':id/review')
   makeReview(
     @Param('id', ParseObjectIdPipe) id: string,
-    @CurrentUser() user,
+    @CurrentUser() user: any,
     @Body() dto: CreateReviewDto,
   ) {
     return this.service.makeReview(user.id, String(id), dto);
   }
 
+  @RoleDecorator(Role.ADMIN)
   @Post()
   create(@Body() dto: CreateProductDto) {
     return this.service.createProduct(dto);
   }
 
+  @RoleDecorator(Role.ADMIN)
   @Delete(':id')
   delete(@Param('id', ParseObjectIdPipe) id: string) {
     return this.service.delete(String(id));
   }
 
+  @RoleDecorator(Role.ADMIN)
   @Patch(':id')
   update(
     @Param('id', ParseObjectIdPipe) id: string,
