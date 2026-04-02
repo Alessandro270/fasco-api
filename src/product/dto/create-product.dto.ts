@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsArray,
   IsHexColor,
   IsNotEmpty,
   IsNumber,
@@ -36,12 +35,12 @@ export class CreateProductDto {
   unitPrice: number;
 
   @ApiProperty({
-    example: ['P', 'M', 'G'],
-    description: 'Tamanhos disponíveis do produto',
+    example: 'L',
+    description: 'Tamanho do produto',
   })
-  @IsArray()
+  @IsString()
   @IsOptional()
-  size: string[];
+  size: string;
 
   @ApiProperty({
     example: '#FF5733',

@@ -61,6 +61,18 @@ export class CheckoutDto {
 
   @ApiProperty({
     description: 'Lista de itens da compra',
+    example: [
+      {
+        productId: '60d21b4667d0d8992e610c85',
+        quantity: 2,
+        price: 199.99,
+      },
+      {
+        productId: '60d21b4967d0d8992e610c86',
+        quantity: 1,
+        price: 99.99,
+      },
+    ],
   })
   @IsArray()
   @ValidateNested({ each: true })
